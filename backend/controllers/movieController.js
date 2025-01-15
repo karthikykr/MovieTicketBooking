@@ -1,3 +1,4 @@
+const Joi = require('joi');
 const Movie = require('../models/movieModel');
 const joi = require('joi');
 
@@ -40,7 +41,7 @@ exports.getMovies = async (req, res) => {
 
 
         const movies = await Movie.find(query);
-        res.status(200).json({ success: true, movies });
+        res.status(200).json({ success: true,movies});
     } catch (error) {
         res.status(500).json({ success: false, message: error.message });
     }
