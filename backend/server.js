@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const dotenv = require('dotenv');
 const movieRoutes = require('./routes/movieRoutes');
-
+const authRoutes = require('./routes/authRoutes');
 
 dotenv.config();
 
@@ -24,9 +24,9 @@ const connectDB = async () => {
 
 connectDB();
 
+// authentication routes
+app.use('/api/auth', authRoutes);
 
-//Routes
-app.use('/api/movies', movieRoutes);
 
 //start server
 const PORT = process.env.PORT || 5000;
