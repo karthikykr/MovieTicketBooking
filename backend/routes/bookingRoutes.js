@@ -4,7 +4,7 @@ const Booking = require("../models/bookingModel");
 const Movie = require("../models/movieModel");
 
 // Create a new booking
-router.post("/", async (req, res) => {
+router.post("/book", async (req, res) => {
     try {
         const { user, movie, seats, totalPrice } = req.body;
 
@@ -22,7 +22,7 @@ router.post("/", async (req, res) => {
 });
 
 // Get all bookings
-router.get("/", async (req, res) => {
+router.get("/getBook", async (req, res) => {
     try {
         const bookings = await Booking.find().populate("movie");
         res.status(200).json(bookings);
@@ -51,6 +51,49 @@ router.delete("/:id", async (req, res) => {
         res.status(200).json({ message: "Booking deleted successfully" });
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+});
+
+//create group booking
+router.post("/api/bookings/group", async (req, res) => {
+    try {
+        const { groupLeader, groupMembers, movie, theater, seats, totalPrice } = req.body;
+
+        // Validate request data
+        if (!groupLeader || !movie || !theater || !seats || !Array.isArray(groupMembers)) {
+            return res.status(400).json({ message: 'Invalid group booking data!' });
+        }
+
+        // Check seat availability
+        const theaterData = await Theater.findById(theater);
+        const unavailableSeats = seats.filter(seat => !theaterData.availableSeats.includes(seat));
+
+        if (unavailableSeats.length > 0) {
+            return res.status(400).json({ message: 'Some seats are unavailable!', unavailableSeats });
+        }
+
+        // Create group booking
+        const booking = new Booking({
+            groupLeader,
+            groupMembers,
+            movie,
+            theater,
+            seats,
+            totalPrice,
+            isGroupBooking: true,
+        });
+
+        // Update seat availability
+        theaterData.availableSeats = theaterData.availableSeats.filter(seat => !seats.includes(seat));
+        await theaterData.save();
+        await booking.save();
+
+        res.status(201).json({
+            message: 'Group booking created successfully!',
+            booking,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Error creating group booking', error: error.message });
     }
 });
 

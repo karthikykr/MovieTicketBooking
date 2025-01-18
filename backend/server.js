@@ -5,6 +5,7 @@ const dotenv = require('dotenv');
 const moviesRoutes = require('./routes/moviesRoutes');
 const authRoutes = require('./routes/authRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
+const theaterRoutes = require('./routes/theaterRoutes');
 
 dotenv.config();
 
@@ -29,6 +30,7 @@ connectDB();
 app.use('/api/auth', authRoutes);
 app.use('/api/movies', moviesRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/theater', theaterRoutes);
 
 //start server
 const PORT = process.env.PORT || 5000;

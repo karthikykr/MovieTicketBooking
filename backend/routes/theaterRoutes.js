@@ -1,15 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const Movie = require('../models/movieModel');
+const Booking = require("../models/bookingModel");
+const theaterModel = require('../models/theaterModel');
 
 
 //fetch available seats for a specific theater
 router.get('/:_id/seats', async (req, res) => {
     try {
-        const { _id } = req.params;
+        const { theaterId } = req.params;
 
         // Find the theater by ID
-        const theater = await Theater.findById(_id).populate('movie');
+        const theater = await Theater.findById(TheaterId).populate('movie');
 
         if (!theater) {
             return res.status(404).json({ message: 'Theater not found' });
@@ -60,3 +62,5 @@ router.post('/:theaterId/book', async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 });
+
+module.exports = router;
