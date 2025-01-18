@@ -5,6 +5,7 @@ const bookingSchema = new mongoose.Schema({
     movie: { type: mongoose.Schema.Types.ObjectId, ref: "Movie", required: true },
     seats: { type: Number, required: true },
     bookingDate: { type: Date, default: Date.now },
+    totalPrice: { type: String, required: true },
 });
 
 module.exports = mongoose.model("Booking", bookingSchema);

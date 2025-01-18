@@ -7,7 +7,7 @@ const router = express.Router();
 
 //generate JWT 
 const generateToken = (id) => {
-    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: 'id' });
+    return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1h' });
 };
 
 //Register a new user
@@ -24,7 +24,7 @@ router.post('/register', async (req, res) => {
         const user = await User.create({ name, email, password });
 
         res.status(201).json({
-            _id: user.id,
+            userId: user.id,
             name: user.name,
             email: user.email,
             token: generateToken(user._id),
@@ -44,7 +44,7 @@ router.post('/login', async (req, res) => {
 
         if (user && (await user.matchPassword(password))) {
             res.json({
-                _id: user.id,
+                userId: user.id,
                 name: user.name,
                 email: user.email,
                 token: generateToken(user._id),

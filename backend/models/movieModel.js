@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const theaterModel = require('./theaterModel');
 
 const movieSchema = new mongoose.Schema({
     title: { type: String, required: true },
@@ -7,6 +8,8 @@ const movieSchema = new mongoose.Schema({
     genre: { type: String },
     language: { type: String },
     duration: { type: Number },
+    theater: { type: mongoose.Schema.Types.ObjectId, ref: 'theater', required: false },
+
 });
 
 
