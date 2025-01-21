@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Hero from '../components/Hero';
 import MovieGrid from '../components/MovieGrid';
 import Filters from '../components/Filters';
+import Navbar from '../components/Navbar';
 
 const HomePage = () => {
     const [movies, setMovies] = useState([
@@ -17,6 +18,7 @@ const HomePage = () => {
 
     return (
         <div>
+            <Navbar />
             <Hero />
             <Filters />
             <div className="p-4">
