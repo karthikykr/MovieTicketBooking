@@ -9,7 +9,10 @@ const movieSchema = new mongoose.Schema({
     language: { type: String },
     duration: { type: Number },
     theater: { type: mongoose.Schema.Types.ObjectId, ref: 'theater', required: false },
-
+    rating: { type: String },
+    image: { type: String },
+    votes: { type: String },
+    genre: { type: String },
 });
 
 
