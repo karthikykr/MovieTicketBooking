@@ -6,16 +6,12 @@ const Movie = require("../models/movieModel");
 // Create a new booking
 router.post("/book", async (req, res) => {
     try {
-        const { user, movie, seats, totalPrice } = req.body;
+        const { user, movie, theater, seats, totalPrice } = req.body;
 
-        // Check if the movie exists
-        const movieExists = await Movie.findById(movie);
-        if (!movieExists)
-            return res.status(404).json({ message: "Movie not found" });
+        const booking = new Booking({ user, movie, theater, seats, totalPrice });
+        await booking.save();
 
-        const booking = new Booking({ user, movie, seats, totalPrice });
-        const savedBooking = await booking.save();
-        res.status(201).json(savedBooking);
+        res.status(201).json(booking);
     } catch (error) {
         res.status(400).json({ error: error.message });
     }

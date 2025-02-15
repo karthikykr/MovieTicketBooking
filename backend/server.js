@@ -5,7 +5,9 @@ const dotenv = require('dotenv');
 const moviesRoutes = require('./routes/moviesRoutes');
 const authRoutes = require('./routes/authRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
-const theaterRoutes = require('./routes/theaterRoutes');
+const movieShowtimeRoutes = require("./routes/movieShowtimesRoutes");
+const theaterRoutes = require("./routes/theaterRoutes");
+
 
 dotenv.config();
 
@@ -13,30 +15,31 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-//connect to mongoDB
+// Connect to MongoDB
 const connectDB = async () => {
     try {
-        const conn = await mongoose.connect(process.env.MONGO_URI);
+        const conn = await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
         console.log(`MongoDB Connected: ${conn.connection.host}`);
     } catch (error) {
         console.error(`Error: ${error.message}`);
-        process.exit(1); // Exit with failure
+        process.exit(1);
     }
 };
 
 connectDB();
 
-// authentication routes
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/movies', moviesRoutes);
 app.use('/api/bookings', bookingRoutes);
-app.use('/api/theater', theaterRoutes);
+app.use("/api/showtimes", movieShowtimeRoutes);
+app.use("/api/theaters", theaterRoutes);
 
-//start server
+// Start Server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-    console.log(`Server runninng on http://localhost:${PORT}`);
+    console.log(`Server running on http://localhost:${PORT}`);
 });
-
-
-

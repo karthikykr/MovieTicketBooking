@@ -26,51 +26,46 @@ const MovieDetails = () => {
         fetchMovieDetails();
     }, [id]);
 
-    if (loading) return <div className="text-center text-gray-700">Loading...</div>;
-    if (error) return <div className="text-center text-red-500">{error}</div>;
+    if (loading) return <div className="text-center text-gray-700 text-lg">Loading...</div>;
+    if (error) return <div className="text-center text-red-500 text-lg">{error}</div>;
 
     return (
-        <div className="max-w-6xl mx-auto p-6 bg-gray-100 min-h-screen">
+        <div className="max-w-7xl mx-auto p-6 bg-gradient-to-br from-gray-50 to-gray-200 min-h-screen">
             <button
                 onClick={() => navigate(-1)}
-                className="mb-4 text-gray-600 hover:text-gray-900 transition"
+                className="mb-4 text-gray-700 hover:text-gray-900 transition flex items-center gap-1"
             >
                 ← Back
             </button>
 
-            <div className="bg-white shadow-lg rounded-xl overflow-hidden p-6">
-                <div className="flex flex-col md:flex-row">
-                    {/* Movie Poster */}
+            <div className="bg-white shadow-xl rounded-xl overflow-hidden p-6">
+                <div className="flex flex-col md:flex-row gap-6">
                     <img
                         src={movie.image || "/assets/placeholder.jpg"}
                         alt={movie.title}
-                        className="w-full md:w-1/3 object-cover rounded-lg"
+                        className="w-full md:w-1/3 object-cover rounded-xl shadow-lg"
                     />
-
-                    {/* Movie Details */}
                     <div className="p-6 md:w-2/3">
-                        <h1 className="text-3xl font-bold text-gray-800">{movie.title}</h1>
-
-                        {/* Rating */}
-                        <div className="flex items-center space-x-2 mt-2">
-                            <FaStar className="text-yellow-400" />
-                            <span className="text-gray-700">{movie.rating} | {movie.votes} Votes</span>
+                        <h1 className="text-4xl font-bold text-gray-800">{movie.title}</h1>
+                        <div className="flex items-center space-x-2 mt-3">
+                            <FaStar className="text-yellow-400 text-xl" />
+                            <span className="text-gray-700 text-lg font-semibold">
+                                {movie.rating} | {movie.votes} Votes
+                            </span>
                         </div>
-
-                        {/* Genre, Duration, Release Date */}
-                        <p className="text-gray-500 mt-2">{movie.genre} | {movie.duration} | {movie.releaseDate}</p>
-
-                        {/* Description */}
-                        <p className="text-gray-700 mt-4">{movie.description}</p>
-
-                        {/* Booking Button */}
-                        <button className="mt-4 px-6 py-2 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition">
+                        <p className="text-gray-500 mt-3 text-lg">
+                            {movie.genre} | {movie.duration} | {movie.releaseDate}
+                        </p>
+                        <p className="text-gray-700 mt-5 text-lg">{movie.description}</p>
+                        <button
+                            onClick={() => navigate(`/showtimes/${id}`)}
+                            className="mt-5 px-6 py-3 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition text-lg font-semibold"
+                        >
                             Book Tickets
                         </button>
                     </div>
                 </div>
             </div>
-
             {/* Cast Section */}
             <div className="mt-8 bg-white p-6 rounded-lg shadow-lg">
                 <h2 className="text-2xl font-bold text-gray-800">Cast</h2>
@@ -107,6 +102,9 @@ const MovieDetails = () => {
                 </div>
             </div>
         </div>
+
+
+
     );
 };
 
