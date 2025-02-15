@@ -7,7 +7,7 @@ const movieSchema = new mongoose.Schema({
     releaseDate: { type: Date },
     genre: { type: String },
     language: { type: String },
-    duration: { type: Number },
+    duration: { type: String },
     theater: { type: mongoose.Schema.Types.ObjectId, ref: 'theater', required: false },
     rating: { type: String },
     image: { type: String },

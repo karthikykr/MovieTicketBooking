@@ -1,3 +1,4 @@
+import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -30,7 +31,7 @@ const Hero = () => {
         speed: 600,
         slidesToShow: 1,
         centerMode: true,
-        centerPadding: "12%",
+        centerPadding: "15%", // Better visibility on mobile
         autoplay: true,
         autoplaySpeed: 4000,
         arrows: false,
@@ -39,7 +40,7 @@ const Hero = () => {
                 breakpoint: 1024,
                 settings: {
                     slidesToShow: 1,
-                    centerPadding: "8%",
+                    centerPadding: "10%",
                 },
             },
             {
@@ -47,6 +48,13 @@ const Hero = () => {
                 settings: {
                     slidesToShow: 1,
                     centerPadding: "5%",
+                },
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    centerPadding: "2%", // Ensure full view in mobile
                 },
             },
         ],
@@ -57,7 +65,10 @@ const Hero = () => {
             <div className="w-full max-w-screen-xl mx-auto overflow-hidden">
                 <Slider {...settings} className="w-full">
                     {movies.map((movie) => (
-                        <div key={movie.id} className="relative w-full h-[350px] flex justify-center">
+                        <div
+                            key={movie.id}
+                            className="relative w-full h-[400px] md:h-[350px] sm:h-[300px] flex justify-center"
+                        >
                             {/* Movie Poster */}
                             <img
                                 src={movie.image}
@@ -66,13 +77,15 @@ const Hero = () => {
                             />
 
                             {/* Light Gradient Overlay */}
-                            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black-200/70 rounded-lg"></div>
+                            <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/70 rounded-lg"></div>
 
                             {/* Movie Details */}
-                            <div className="absolute bottom-8 left-8 text-white space-y-2 max-w-md">
-                                <h1 className="text-xl md:text-2xl font-semibold">{movie.title}</h1>
-                                <p className="text-sm md:text-base">{movie.description}</p>
-                                <button className="bg-blue-600 px-5 py-2 rounded-md text-white font-medium hover:bg-blue-700 transition">
+                            <div className="absolute bottom-6 left-6 md:bottom-8 md:left-8 text-white space-y-2 max-w-xs sm:max-w-md">
+                                <h1 className="text-lg sm:text-xl md:text-2xl font-semibold">
+                                    {movie.title}
+                                </h1>
+                                <p className="text-sm sm:text-base">{movie.description}</p>
+                                <button className="bg-blue-600 px-4 py-2 rounded-md text-white font-medium hover:bg-blue-700 transition">
                                     Book Now
                                 </button>
                             </div>

@@ -1,11 +1,14 @@
-import React from 'react';
-import { FaStar } from 'react-icons/fa';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { FaStar } from "react-icons/fa";
 
-const MovieCard = ({ movie, onClick }) => {
+const MovieCard = ({ movie }) => {
+    const navigate = useNavigate(); // Hook for navigation
+
     return (
         <div
             className="relative w-full h-96 rounded-xl overflow-hidden cursor-pointer transition-transform transform hover:scale-105 shadow-lg"
-            onClick={() => onClick(movie.id)}
+            onClick={() => navigate(`/movie/${movie._id}`)} // Navigate to details page
         >
             {/* Background Image */}
             <img
@@ -18,7 +21,7 @@ const MovieCard = ({ movie, onClick }) => {
             <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
 
             {/* Movie Details Overlay */}
-            <div className="absolute bottom-4 left-0 right-0 px-4 py-3 bg-black bg-opacity-40 backdrop-blur-md rounded-b-xl text-white">
+            <div className="absolute bottom-4 left-0 right-0 px-4 py-3 bg-black bg-opacity-10  rounded-b-xl text-white">
                 <h3 className="text-lg font-semibold">{movie.title}</h3>
 
                 {/* Rating and Votes */}

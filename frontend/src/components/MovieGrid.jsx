@@ -1,12 +1,12 @@
-import React from 'react';
-import MovieCard from './MovieCard';
+import React from "react";
+import MovieCard from "./MovieCard";
 
-const MovieGrid = ({ movies, onMovieClick, onSeeMore }) => {
+const MovieGrid = ({ movies, onSeeMore }) => {
     return (
-        <div className="relative">
+        <div className="relative max-w-screen-xl mx-auto px-4">
             {/* Header with Title and See More */}
-            <div className="flex justify-between items-center mb-4">
-                <h2 className="text-2xl font-bold text-gray-800">Recommended Movies</h2>
+            <div className="flex justify-between items-center mb-4 px-2 sm:px-4">
+                <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Recommended Movies</h2>
                 <button
                     onClick={onSeeMore}
                     className="text-red-500 hover:text-red-600 font-medium transition"
@@ -16,9 +16,11 @@ const MovieGrid = ({ movies, onMovieClick, onSeeMore }) => {
             </div>
 
             {/* Movie Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6 mx-auto max-w-7xl px-4">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mx-auto sm:h-10">
                 {movies.map((movie) => (
-                    <MovieCard key={movie.id} movie={movie} onClick={onMovieClick} />
+                    <div key={movie.id} className="w-full">
+                        <MovieCard movie={movie} />
+                    </div>
                 ))}
             </div>
         </div>

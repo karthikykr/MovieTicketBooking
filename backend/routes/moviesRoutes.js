@@ -24,10 +24,11 @@ router.get("/allMovie", async (req, res) => {
 });
 
 //Get a single movie : working
-router.post("/:_id", async (req, res) => {
+router.get("/:id", async (req, res) => {
     try {
-        const { _id } = req.body;
-        const movie = await Movie.findById(_id);
+        const { id } = req.params;
+        console.log("Fetching movie with ID:", id); // Debugging log
+        const movie = await Movie.findById(id);
         if (!movie) return res.status(404).json({ message: "Movie not found" });
         res.status(200).json(movie);
     } catch (error) {
@@ -36,20 +37,25 @@ router.post("/:_id", async (req, res) => {
 });
 
 
-//Update a movie : not working
+
+//Update a movie : working
 router.put("/:_id", async (req, res) => {
     try {
-        const updateMovie = await Movie.findByIdAndUpdate(req.params.id, req.body, {
+        const updatedMovie = await Movie.findByIdAndUpdate(req.params._id, req.body, {
             new: true,
             runValidators: true,
         });
-        if (!updatedMovie)
+
+        if (!updatedMovie) {
             return res.status(404).json({ message: "Movie not found" });
-        res.status(200).json({ updatedMovie });
-    } catch {
+        }
+
+        res.status(200).json(updatedMovie);
+    } catch (error) {
         res.status(400).json({ error: error.message });
     }
 });
+
 
 
 // Delete a movie : working
