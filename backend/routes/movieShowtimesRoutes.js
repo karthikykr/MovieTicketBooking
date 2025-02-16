@@ -5,7 +5,7 @@ const MovieShowtime = require("../models/MovieShowtimeModel");
 const Theater = require("../models/theaterModel");
 const Movie = require("../models/movieModel");
 
-//  Get showtimes for a specific movie
+// Get showtimes for a specific movie
 router.get("/movie/:movieId", async (req, res) => {
     try {
         const showtimes = await MovieShowtime.find({ movieId: req.params.movieId }).populate("theaterId");
@@ -15,7 +15,7 @@ router.get("/movie/:movieId", async (req, res) => {
     }
 });
 
-//  Get showtimes for a specific theater
+// Get showtimes for a specific theater
 router.get("/theater/:theaterId", async (req, res) => {
     try {
         const showtimes = await MovieShowtime.find({ theaterId: req.params.theaterId }).populate("movieId");
