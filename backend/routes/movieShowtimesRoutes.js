@@ -58,4 +58,45 @@ router.post("/", async (req, res) => {
     }
 });
 
+
+// Get seat availability for a specific showtime
+router.get("/:showtimeId/seats", async (req, res) => {
+    try {
+        const showtime = await Showtime.findById(req.params.showtimeId);
+        if (!showtime) return res.status(404).json({ message: "Showtime not found" });
+
+        res.json(showtime.showtimes);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error" });
+    }
+});
+
+router.post("/:showtimeId/book", async (req, res) => {
+    try {
+        const { selectedSeats } = req.body;
+        const showtime = await Showtime.findById(req.params.showtimeId);
+
+        if (!showtime) return res.status(404).json({ message: "Showtime not found" });
+
+        // Update seat status
+        showtime.showtimes.forEach((st) => {
+            if (st._id.toString() === req.params.showtimeId) {
+                st.seats.forEach((seat) => {
+                    if (selectedSeats.includes(seat.seatNumber)) {
+                        if (seat.isBooked) {
+                            return res.status(400).json({ message: `Seat ${seat.seatNumber} is already booked!` });
+                        }
+                        seat.isBooked = true;
+                    }
+                });
+            }
+        });
+
+        await showtime.save();
+        res.json({ message: "Seats booked successfully!" });
+    } catch (error) {
+        res.status(500).json({ message: "Server Error" });
+    }
+});
+
 module.exports = router;
