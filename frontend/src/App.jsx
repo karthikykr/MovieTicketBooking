@@ -3,6 +3,8 @@ import HomePage from './pages/HomePage';
 import MovieDetails from './pages/MovieDetails';
 import MovieShowtimes from './pages/MovieShowtimes';
 
+
+
 function App() {
   return (
     <BrowserRouter>

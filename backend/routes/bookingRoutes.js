@@ -18,7 +18,7 @@ router.post("/book", async (req, res) => {
 });
 
 // Get all bookings
-router.get("/getBook", async (req, res) => {
+router.get("/bookings", async (req, res) => {
     try {
         const bookings = await Booking.find().populate("movie");
         res.status(200).json(bookings);
