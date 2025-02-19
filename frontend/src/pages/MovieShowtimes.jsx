@@ -4,7 +4,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import SelectSeatsModal from "../components/SelectSeatsModal"; // Import the modal component
 
 const ShowtimesPage = () => {
-    const { id } = useParams();
+    const { id: movieId } = useParams(); // Use movieId instead of showtimeId
     const navigate = useNavigate();
     const [movie, setMovie] = useState(null);
     const [showtimes, setShowtimes] = useState([]);
@@ -12,20 +12,21 @@ const ShowtimesPage = () => {
     const [error, setError] = useState("");
     const [locationFilter, setLocationFilter] = useState("all");
     const [dateFilter, setDateFilter] = useState("all");
-    const [priceFilter, setPriceFilter] = useState("all");
     const [selectedShowtime, setSelectedShowtime] = useState(null);
 
     useEffect(() => {
         const fetchMovieAndShowtimes = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/showtimes/movie/${id}`);
+                // Fetch showtimes based on movieId
+                const response = await fetch(`http://localhost:5000/api/showtimes/movies/${movieId}`);
                 if (!response.ok) throw new Error("Showtimes not found");
                 const showtimeData = await response.json();
-                if (!showtimeData || showtimeData.length === 0) throw new Error("No showtimes available");
+                if (!showtimeData.length) throw new Error("No showtimes available");
 
                 setShowtimes(showtimeData);
 
-                const movieResponse = await fetch(`http://localhost:5000/api/movies/${id}`);
+                // Fetch movie details
+                const movieResponse = await fetch(`http://localhost:5000/api/movies/${movieId}`);
                 if (!movieResponse.ok) throw new Error("Movie not found");
                 const movieData = await movieResponse.json();
                 setMovie(movieData);
@@ -37,7 +38,7 @@ const ShowtimesPage = () => {
         };
 
         fetchMovieAndShowtimes();
-    }, [id]);
+    }, [movieId]);
 
     const getNextThreeDates = () => {
         const dates = [];
@@ -95,19 +96,15 @@ const ShowtimesPage = () => {
                                 <h3 className="text-xl font-semibold text-gray-800">{show.theaterId?.name || "Unknown Theater"}</h3>
                                 <p className="text-gray-500 text-sm">{show.theaterId?.location || "Location unavailable"}</p>
                                 <div className="flex flex-wrap gap-3 mt-3">
-                                    {show.showtimes && show.showtimes.length > 0 ? (
-                                        show.showtimes.map((st, index) => (
-                                            <button
-                                                key={index}
-                                                className="px-4 py-2 border border-blue-500 text-blue-500 bg-white rounded-lg shadow-md hover:bg-blue-100 transition"
-                                                onClick={() => handleShowtimeClick(st)}
-                                            >
-                                                {st.time}
-                                            </button>
-                                        ))
-                                    ) : (
-                                        <span className="text-gray-500">No times available</span>
-                                    )}
+                                    {show.showtimes?.map((st, index) => (
+                                        <button
+                                            key={index}
+                                            className="px-4 py-2 border border-blue-500 text-blue-500 bg-white rounded-lg shadow-md hover:bg-blue-100 transition"
+                                            onClick={() => handleShowtimeClick(st)}
+                                        >
+                                            {st.time}
+                                        </button>
+                                    ))}
                                 </div>
                             </div>
                         ))}
