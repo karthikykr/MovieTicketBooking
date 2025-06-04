@@ -1,10 +1,25 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FiSearch, FiUser, FiMenu, FiX, FiMapPin, FiBookmark, FiHeart, FiSettings, FiLogOut } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
+    const navigate = useNavigate();
     const [menuOpen, setMenuOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [user, setUser] = useState(null);
     const profileRef = useRef(null); // Reference for profile dropdown
+
+    // Check authentication status
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const userData = localStorage.getItem('user');
+
+        if (token && userData) {
+            setIsLoggedIn(true);
+            setUser(JSON.parse(userData));
+        }
+    }, []);
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -20,6 +35,15 @@ const Navbar = () => {
             document.removeEventListener("mousedown", handleClickOutside);
         };
     }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setIsLoggedIn(false);
+        setUser(null);
+        setProfileOpen(false);
+        navigate('/');
+    };
 
     return (
         <nav className="bg-white shadow-md relative z-50">
@@ -38,7 +62,7 @@ const Navbar = () => {
                     {/* Location Display (No Dropdown) */}
                     <div className="flex items-center space-x-2 text-gray-700">
                         <FiMapPin />
-                        <span>Mumbai</span>
+                        <span>Mangalore</span>
                     </div>
 
                     {/* Search Box */}
@@ -51,38 +75,49 @@ const Navbar = () => {
                         <FiSearch className="absolute left-3 top-3 text-gray-500" />
                     </div>
 
-                    <a href="/signup" className="hover:text-blue-600 font-medium">
-                        Sign Up
-                    </a>
+                    {!isLoggedIn ? (
+                        <>
+                            <a href="/login" className="hover:text-blue-600 font-medium">
+                                Login
+                            </a>
+                            <a href="/signup" className="hover:text-blue-600 font-medium">
+                                Sign Up
+                            </a>
+                        </>
+                    ) : (
+                        <>
+                            <span className="text-gray-700">Welcome, {user?.name}!</span>
 
-                    {/* Profile Section */}
-                    <div className="relative" ref={profileRef}>
-                        <FiUser
-                            className="text-xl cursor-pointer text-gray-700 hover:text-blue-600"
-                            onClick={() => setProfileOpen(!profileOpen)}
-                        />
+                            {/* Profile Section */}
+                            <div className="relative" ref={profileRef}>
+                                <FiUser
+                                    className="text-xl cursor-pointer text-gray-700 hover:text-blue-600"
+                                    onClick={() => setProfileOpen(!profileOpen)}
+                                />
 
-                        {/* Profile Dropdown */}
-                        {profileOpen && (
-                            <div className="absolute right-0 top-full mt-2 w-48 bg-white border rounded-md shadow-lg z-50">
-                                <a href="/profile" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    <FiUser className="mr-2" /> My Profile
-                                </a>
-                                <a href="/bookings" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    <FiBookmark className="mr-2" /> My Bookings
-                                </a>
-                                <a href="/favorites" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    <FiHeart className="mr-2" /> Favorites
-                                </a>
-                                <a href="/settings" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
-                                    <FiSettings className="mr-2" /> Settings
-                                </a>
-                                <a href="/logout" className="flex items-center px-4 py-2 text-red-600 hover:bg-gray-100">
-                                    <FiLogOut className="mr-2" /> Logout
-                                </a>
+                                {/* Profile Dropdown */}
+                                {profileOpen && (
+                                    <div className="absolute right-0 top-full mt-2 w-48 bg-white border rounded-md shadow-lg z-50">
+                                        <a href="/dashboard" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <FiUser className="mr-2" /> Dashboard
+                                        </a>
+                                        <a href="/dashboard" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <FiBookmark className="mr-2" /> My Bookings
+                                        </a>
+                                        <a href="/favorites" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <FiHeart className="mr-2" /> Favorites
+                                        </a>
+                                        <a href="/settings" className="flex items-center px-4 py-2 text-gray-700 hover:bg-gray-100">
+                                            <FiSettings className="mr-2" /> Settings
+                                        </a>
+                                        <button onClick={handleLogout} className="flex items-center w-full px-4 py-2 text-red-600 hover:bg-gray-100">
+                                            <FiLogOut className="mr-2" /> Logout
+                                        </button>
+                                    </div>
+                                )}
                             </div>
-                        )}
-                    </div>
+                        </>
+                    )}
                 </div>
 
                 {/* Mobile Menu Button */}

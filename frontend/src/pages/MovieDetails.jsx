@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 
@@ -12,7 +12,7 @@ const MovieDetails = () => {
     useEffect(() => {
         const fetchMovieDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:5000/api/movies/${id}`);
+                const response = await fetch(`http://localhost:3001/api/movies/${id}`);
                 if (!response.ok) throw new Error("Movie not found");
                 const data = await response.json();
                 setMovie(data);

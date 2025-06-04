@@ -13,12 +13,13 @@ const ShowtimesPage = () => {
     const [locationFilter, setLocationFilter] = useState("all");
     const [dateFilter, setDateFilter] = useState("all");
     const [selectedShowtime, setSelectedShowtime] = useState(null);
+    const [selectedShowtimeData, setSelectedShowtimeData] = useState(null);
 
     useEffect(() => {
         const fetchMovieAndShowtimes = async () => {
             try {
                 // Fetch showtimes based on movieId
-                const response = await fetch(`http://localhost:5000/api/showtimes/movies/${movieId}`);
+                const response = await fetch(`http://localhost:3001/api/showtimes/movies/${movieId}`);
                 if (!response.ok) throw new Error("Showtimes not found");
                 const showtimeData = await response.json();
                 if (!showtimeData.length) throw new Error("No showtimes available");
@@ -26,7 +27,7 @@ const ShowtimesPage = () => {
                 setShowtimes(showtimeData);
 
                 // Fetch movie details
-                const movieResponse = await fetch(`http://localhost:5000/api/movies/${movieId}`);
+                const movieResponse = await fetch(`http://localhost:3001/api/movies/${movieId}`);
                 if (!movieResponse.ok) throw new Error("Movie not found");
                 const movieData = await movieResponse.json();
                 setMovie(movieData);
@@ -50,8 +51,9 @@ const ShowtimesPage = () => {
         return dates;
     };
 
-    const handleShowtimeClick = (showtime) => {
+    const handleShowtimeClick = (showtime, showtimeData) => {
         setSelectedShowtime(showtime);
+        setSelectedShowtimeData(showtimeData);
     };
 
     if (loading) return <div className="text-center text-gray-700 text-lg">Loading...</div>;
@@ -100,9 +102,12 @@ const ShowtimesPage = () => {
                                         <button
                                             key={index}
                                             className="px-4 py-2 border border-blue-500 text-blue-500 bg-white rounded-lg shadow-md hover:bg-blue-100 transition"
-                                            onClick={() => handleShowtimeClick(st)}
+                                            onClick={() => handleShowtimeClick(st, show)}
                                         >
-                                            {st.time}
+                                            <div className="text-center">
+                                                <div className="font-semibold">{st.time}</div>
+                                                <div className="text-xs">{st.format} - ${st.price}</div>
+                                            </div>
                                         </button>
                                     ))}
                                 </div>
@@ -114,8 +119,15 @@ const ShowtimesPage = () => {
                 )}
             </div>
 
-            {selectedShowtime && (
-                <SelectSeatsModal showtime={selectedShowtime} onClose={() => setSelectedShowtime(null)} />
+            {selectedShowtime && selectedShowtimeData && (
+                <SelectSeatsModal
+                    showtime={selectedShowtime}
+                    showtimeData={selectedShowtimeData}
+                    onClose={() => {
+                        setSelectedShowtime(null);
+                        setSelectedShowtimeData(null);
+                    }}
+                />
             )}
         </div>
     );
