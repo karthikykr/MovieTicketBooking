@@ -76,14 +76,14 @@ const MovieCard = ({ movie }) => {
 
                 {/* Movie Info */}
                 <div className="flex items-center gap-3 text-sm text-gray-300 mb-2">
-                    <span>{movie.releaseDate?.split('-')[0] || 'TBA'}</span>
+                    <span>{movie.releaseDate ? new Date(movie.releaseDate).getFullYear() : 'TBA'}</span>
                     <span>•</span>
                     <span>{movie.duration || '120'} min</span>
                 </div>
 
                 {/* Genre */}
                 <p className="text-sm text-gray-400 line-clamp-1 mb-3">
-                    {movie.genre}
+                    {Array.isArray(movie.genre) ? movie.genre.join(', ') : movie.genre}
                 </p>
 
                 {/* Book Now Button */}

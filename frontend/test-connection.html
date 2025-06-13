@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Connection Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .movie-card {
+            background: rgba(255, 255, 255, 0.2);
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        .loading {
+            text-align: center;
+            font-size: 18px;
+        }
+        .error {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #ff6b6b;
+        }
+        .success {
+            color: #4CAF50;
+            background: rgba(76, 175, 80, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #4CAF50;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-card {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #4CAF50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Movie Ticket Booking System - API Connection Test</h1>
+        
+        <div id="status" class="loading">
+            🔄 Testing connection to backend API...
+        </div>
+
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-card">
+                <div class="stat-number" id="nowPlayingCount">0</div>
+                <div>Now Playing</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="popularCount">0</div>
+                <div>Popular Movies</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="theatersCount">0</div>
+                <div>Theaters</div>
+            </div>
+        </div>
+
+        <div id="movies" style="display: none;">
+            <h2>🎭 Sample Movies from Database:</h2>
+            <div id="moviesList"></div>
+        </div>
+    </div>
+
+    <script>
+        async function testConnection() {
+            try {
+                const statusDiv = document.getElementById('status');
+                const statsDiv = document.getElementById('stats');
+                const moviesDiv = document.getElementById('movies');
+                const moviesListDiv = document.getElementById('moviesList');
+
+                // Test API endpoints
+                const [nowPlayingRes, popularRes, theatersRes] = await Promise.all([
+                    fetch('http://localhost:3001/api/movies/allMovie'),
+                    fetch('http://localhost:3001/api/movies/popular'),
+                    fetch('http://localhost:3001/api/theaters')
+                ]);
+
+                if (!nowPlayingRes.ok) throw new Error('Failed to fetch now playing movies');
+                if (!popularRes.ok) throw new Error('Failed to fetch popular movies');
+
+                const nowPlayingData = await nowPlayingRes.json();
+                const popularData = await popularRes.json();
+                const theatersData = theatersRes.ok ? await theatersRes.json() : [];
+
+                // Update status
+                statusDiv.innerHTML = `
+                    <div class="success">
+                        ✅ Successfully connected to backend API!<br>
+                        🎯 All movie data is being loaded from the database.
+                    </div>
+                `;
+
+                // Update stats
+                document.getElementById('nowPlayingCount').textContent = nowPlayingData.results?.length || nowPlayingData.length || 0;
+                document.getElementById('popularCount').textContent = popularData.results?.length || popularData.length || 0;
+                document.getElementById('theatersCount').textContent = theatersData.length || 0;
+                statsDiv.style.display = 'grid';
+
+                // Display sample movies
+                const movies = nowPlayingData.results || nowPlayingData;
+                if (movies && movies.length > 0) {
+                    moviesListDiv.innerHTML = movies.slice(0, 5).map(movie => `
+                        <div class="movie-card">
+                            <h3>${movie.title}</h3>
+                            <p><strong>Genre:</strong> ${Array.isArray(movie.genre) ? movie.genre.join(', ') : movie.genre}</p>
+                            <p><strong>Rating:</strong> ⭐ ${movie.rating}/10 (${movie.votes.toLocaleString()} votes)</p>
+                            <p><strong>Duration:</strong> ${movie.duration} minutes</p>
+                            <p><strong>Release:</strong> ${new Date(movie.releaseDate).getFullYear()}</p>
+                            <p><strong>Cast:</strong> ${movie.cast?.length || 0} members</p>
+                        </div>
+                    `).join('');
+                    moviesDiv.style.display = 'block';
+                }
+
+            } catch (error) {
+                document.getElementById('status').innerHTML = `
+                    <div class="error">
+                        ❌ Connection failed: ${error.message}<br>
+                        🔧 Make sure the backend server is running on port 3001
+                    </div>
+                `;
+            }
+        }
+
+        // Run test when page loads
+        testConnection();
+    </script>
+</body>
+</html>

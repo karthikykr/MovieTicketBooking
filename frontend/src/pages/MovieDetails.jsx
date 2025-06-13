@@ -54,7 +54,7 @@ const MovieDetails = () => {
                             </span>
                         </div>
                         <p className="text-gray-500 mt-3 text-lg">
-                            {movie.genre} | {movie.duration} | {movie.releaseDate}
+                            {Array.isArray(movie.genre) ? movie.genre.join(', ') : movie.genre} | {movie.duration} min | {new Date(movie.releaseDate).getFullYear()}
                         </p>
                         <p className="text-gray-700 mt-5 text-lg">{movie.description}</p>
                         <button
@@ -78,7 +78,7 @@ const MovieDetails = () => {
                                 className="w-24 h-24 rounded-full mx-auto"
                             />
                             <p className="mt-2 text-gray-700 font-semibold">{actor.name}</p>
-                            <p className="text-sm text-gray-500">as {actor.role}</p>
+                            <p className="text-sm text-gray-500">as {actor.character}</p>
                         </div>
                     ))}
                 </div>
@@ -96,7 +96,7 @@ const MovieDetails = () => {
                                 className="w-24 h-24 rounded-full mx-auto"
                             />
                             <p className="mt-2 text-gray-700 font-semibold">{member.name}</p>
-                            <p className="text-sm text-gray-500">{member.role}</p>
+                            <p className="text-sm text-gray-500">{member.job}</p>
                         </div>
                     ))}
                 </div>

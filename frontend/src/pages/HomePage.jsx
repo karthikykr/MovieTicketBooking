@@ -24,9 +24,9 @@ const HomePage = () => {
                     axios.get('http://localhost:3001/api/movies/upcoming')
                 ]);
 
-                setNowPlayingMovies(nowPlayingRes.data);
-                setPopularMovies(popularRes.data);
-                setUpcomingMovies(upcomingRes.data);
+                setNowPlayingMovies(nowPlayingRes.data.results || nowPlayingRes.data);
+                setPopularMovies(popularRes.data.results || popularRes.data);
+                setUpcomingMovies(upcomingRes.data.results || upcomingRes.data);
             } catch (error) {
                 console.error('Error fetching movies:', error.message);
             } finally {
