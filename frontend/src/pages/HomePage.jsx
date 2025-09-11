@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import MovieCategories from '../components/MovieCategories';
 import TrendingSection from '../components/TrendingSection';
 import axios from 'axios';
+import { API_ENDPOINTS } from '../utils/api';
 
 const HomePage = () => {
     const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
@@ -19,9 +20,9 @@ const HomePage = () => {
             try {
                 setLoading(true);
                 const [nowPlayingRes, popularRes, upcomingRes] = await Promise.all([
-                    axios.get('http://localhost:3001/api/movies/allMovie'),
-                    axios.get('http://localhost:3001/api/movies/popular'),
-                    axios.get('http://localhost:3001/api/movies/upcoming')
+                    axios.get(API_ENDPOINTS.MOVIES.ALL),
+                    axios.get(API_ENDPOINTS.MOVIES.POPULAR),
+                    axios.get(API_ENDPOINTS.MOVIES.UPCOMING)
                 ]);
 
                 setNowPlayingMovies(nowPlayingRes.data.results || nowPlayingRes.data);
@@ -92,11 +93,11 @@ const HomePage = () => {
             </motion.div>
 
             <motion.div variants={sectionVariants}>
-                <MovieCategories
-                    nowPlaying={nowPlayingMovies}
-                    popular={popularMovies}
-                    upcoming={upcomingMovies}
-                />
+            <MovieCategories
+                nowPlaying={nowPlayingMovies.filter(movie => movie.tmdbId || movie._id)}
+                popular={popularMovies.filter(movie => movie.tmdbId || movie._id)}
+                upcoming={upcomingMovies.filter(movie => movie.tmdbId || movie._id)}
+            />
             </motion.div>
 
             <motion.div variants={sectionVariants} className="py-16">
@@ -104,7 +105,7 @@ const HomePage = () => {
                     <h2 className="text-4xl font-bold text-white mb-8 text-center">
                         Now Playing
                     </h2>
-                    <MovieGrid movies={nowPlayingMovies} />
+                    <MovieGrid movies={nowPlayingMovies.filter(movie => movie.tmdbId || movie._id)} />
                 </div>
             </motion.div>
         </motion.div>

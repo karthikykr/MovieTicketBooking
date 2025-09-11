@@ -104,7 +104,14 @@ const Hero = ({ movies = [] }) => {
                                         <motion.button
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
-                                            onClick={() => navigate(`/movie/${currentMovie.tmdbId}`)}
+                                            onClick={() => {
+                                                const movieId = currentMovie.tmdbId || currentMovie._id;
+                                                if (movieId) {
+                                                    navigate(`/movie/${movieId}`);
+                                                } else {
+                                                    alert("Movie ID is missing. Cannot navigate to details.");
+                                                }
+                                            }}
                                             className="bg-gradient-to-r from-red-600 to-pink-600 text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-3 hover:from-red-700 hover:to-pink-700 transition-all duration-300 shadow-lg"
                                         >
                                             <FaPlay className="text-lg" />
@@ -114,7 +121,14 @@ const Hero = ({ movies = [] }) => {
                                         <motion.button
                                             whileHover={{ scale: 1.05 }}
                                             whileTap={{ scale: 0.95 }}
-                                            onClick={() => navigate(`/movie/${currentMovie.tmdbId}`)}
+                                            onClick={() => {
+                                                const movieId = currentMovie.tmdbId || currentMovie._id;
+                                                if (movieId) {
+                                                    navigate(`/movie/${movieId}`);
+                                                } else {
+                                                    alert("Movie ID is missing. Cannot navigate to details.");
+                                                }
+                                            }}
                                             className="bg-white/20 backdrop-blur-sm border border-white/30 text-white px-8 py-4 rounded-xl font-bold text-lg flex items-center gap-3 hover:bg-white/30 transition-all duration-300"
                                         >
                                             <FaInfoCircle className="text-lg" />

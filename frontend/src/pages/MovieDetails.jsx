@@ -8,12 +8,19 @@ const MovieDetails = () => {
     const [movie, setMovie] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
         const fetchMovieDetails = async () => {
             try {
                 const response = await fetch(`http://localhost:3001/api/movies/${id}`);
-                if (!response.ok) throw new Error("Movie not found");
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        throw new Error("Movie not found");
+                    } else {
+                        throw new Error("Failed to load movie details");
+                    }
+                }
                 const data = await response.json();
                 setMovie(data);
             } catch (err) {
@@ -27,7 +34,19 @@ const MovieDetails = () => {
     }, [id]);
 
     if (loading) return <div className="text-center text-gray-700 text-lg">Loading...</div>;
-    if (error) return <div className="text-center text-red-500 text-lg">{error}</div>;
+    if (error) return (
+        <div className="text-center text-red-500 text-lg">
+            {error}
+            {!isLoggedIn && (
+                <button
+                    onClick={() => navigate("/login")}
+                    className="ml-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                >
+                    Login
+                </button>
+            )}
+        </div>
+    );
 
     return (
         <div className="max-w-7xl mx-auto p-6 bg-gradient-to-br from-gray-50 to-gray-200 min-h-screen">
@@ -102,9 +121,6 @@ const MovieDetails = () => {
                 </div>
             </div>
         </div>
-
-
-
     );
 };
 

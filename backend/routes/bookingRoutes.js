@@ -2,9 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Booking = require("../models/bookingModel");
 const Movie = require("../models/movieModel");
+const { protect } = require("../middleware/auth");
 
 // Create a new booking
-router.post("/book", async (req, res) => {
+router.post("/book", protect, async (req, res) => {
     try {
         const { user, movie, theater, seats, totalPrice } = req.body;
 
@@ -51,7 +52,7 @@ router.delete("/:id", async (req, res) => {
 });
 
 //create group booking
-router.post("/api/bookings/group", async (req, res) => {
+router.post("/api/bookings/group", protect, async (req, res) => {
     try {
         const { groupLeader, groupMembers, movie, theater, seats, totalPrice } = req.body;
 

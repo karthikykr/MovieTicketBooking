@@ -50,13 +50,13 @@ const MovieGrid = ({ movies, onSeeMore, title = "Recommended Movies" }) => {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true, margin: "-100px" }}
-                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
+                className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 items-stretch"
             >
                 {movies.map((movie, index) => (
                     <motion.div
                         key={movie.tmdbId || movie._id || index}
                         variants={itemVariants}
-                        className="w-full"
+                        className="w-full h-full"
                     >
                         <MovieCard movie={movie} />
                     </motion.div>

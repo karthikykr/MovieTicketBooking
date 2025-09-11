@@ -98,7 +98,14 @@ const TrendingSection = ({ movies }) => {
                                         <motion.button
                                             whileHover={{ scale: 1.1 }}
                                             whileTap={{ scale: 0.95 }}
-                                            onClick={() => navigate(`/movie/${movie.tmdbId}`)}
+                                            onClick={() => {
+                                                const movieId = movie.tmdbId || movie._id;
+                                                if (movieId) {
+                                                    navigate(`/movie/${movieId}`);
+                                                } else {
+                                                    alert("Movie ID is missing. Cannot navigate to details.");
+                                                }
+                                            }}
                                             className="bg-white/20 backdrop-blur-sm p-4 rounded-full hover:bg-white/30 transition-colors"
                                         >
                                             <FaPlay className="text-white text-xl ml-1" />
@@ -128,14 +135,21 @@ const TrendingSection = ({ movies }) => {
                                         {movie.description}
                                     </p>
 
-                                    <motion.button
-                                        whileHover={{ scale: 1.02 }}
-                                        whileTap={{ scale: 0.98 }}
-                                        onClick={() => navigate(`/movie/${movie.tmdbId}`)}
-                                        className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
-                                    >
-                                        Book Tickets
-                                    </motion.button>
+                                        <motion.button
+                                            whileHover={{ scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+                                            onClick={() => {
+                                                const movieId = movie.tmdbId || movie._id;
+                                                if (movieId) {
+                                                    navigate(`/movie/${movieId}`);
+                                                } else {
+                                                    alert("Movie ID is missing. Cannot navigate to details.");
+                                                }
+                                            }}
+                                            className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-3 rounded-xl font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
+                                        >
+                                            Book Tickets
+                                        </motion.button>
                                 </div>
                             </div>
 

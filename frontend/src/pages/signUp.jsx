@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { API_ENDPOINTS } from "../utils/api";
+import { motion } from "framer-motion";
 
 const signUp = () => {
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({ name: "", email: "", password: "" });
+    const [formData, setFormData] = useState({ name: "", email: "", password: "", role: "nurse" });
     const [error, setError] = useState("");
 
     const handleChange = (e) => {
@@ -13,7 +15,7 @@ const signUp = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await fetch("http://localhost:3001/api/auth/register", {
+            const res = await fetch(API_ENDPOINTS.AUTH.REGISTER, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
@@ -29,15 +31,21 @@ const signUp = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <form className="bg-white p-8 rounded shadow-md w-full max-w-md" onSubmit={handleSubmit}>
-                <h2 className="text-2xl font-bold mb-6">Sign Up</h2>
-                {error && <p className="text-red-500 mb-4">{error}</p>}
+        <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900">
+            <motion.form 
+                initial={{ opacity: 0, y: -50 }} 
+                animate={{ opacity: 1, y: 0 }} 
+                transition={{ duration: 0.5 }} 
+                className="bg-white p-10 rounded-lg shadow-lg w-full max-w-md"
+                onSubmit={handleSubmit}
+            >
+                <h2 className="text-3xl font-extrabold mb-8 text-center text-gray-900">Sign Up</h2>
+                {error && <p className="text-red-500 mb-6 text-center">{error}</p>}
                 <input
                     type="text"
                     name="name"
                     placeholder="Name"
-                    className="w-full mb-4 p-3 border border-gray-300 rounded"
+                    className="w-full mb-6 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                     onChange={handleChange}
                     required
                 />
@@ -45,7 +53,7 @@ const signUp = () => {
                     type="email"
                     name="email"
                     placeholder="Email"
-                    className="w-full mb-4 p-3 border border-gray-300 rounded"
+                    className="w-full mb-6 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                     onChange={handleChange}
                     required
                 />
@@ -53,14 +61,14 @@ const signUp = () => {
                     type="password"
                     name="password"
                     placeholder="Password"
-                    className="w-full mb-4 p-3 border border-gray-300 rounded"
+                    className="w-full mb-6 p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-600"
                     onChange={handleChange}
                     required
                 />
-                <button className="w-full bg-blue-500 text-white p-3 rounded hover:bg-blue-600" type="submit">
+                <button className="w-full bg-purple-600 text-white p-4 rounded-lg hover:bg-purple-700 transition font-semibold text-lg" type="submit">
                     Sign Up
                 </button>
-            </form>
+            </motion.form>
         </div>
     );
 };

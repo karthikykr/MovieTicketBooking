@@ -12,6 +12,8 @@ const theaterRoutes = require("./routes/theaterRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const paymentRoutes = require("./routes/paymentRoutes");
 const notificationRoutes = require("./routes/notificationRoutes");
+const { protect } = require("./middleware/auth");
+const errorHandler = require("./middleware/errorHandler");
 
 dotenv.config({ path: __dirname + "/.env" });
 
@@ -127,6 +129,9 @@ setInterval(() => {
 
 // Make io available to routes
 app.set("io", io);
+
+// Error handling middleware
+app.use(errorHandler);
 
 // Start Server
 const PORT = process.env.PORT || 3001;

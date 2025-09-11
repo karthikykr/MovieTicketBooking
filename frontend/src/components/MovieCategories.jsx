@@ -138,7 +138,14 @@ const MovieCategories = ({ nowPlaying, popular, upcoming }) => {
                                             <motion.button
                                                 whileHover={{ scale: 1.1 }}
                                                 whileTap={{ scale: 0.95 }}
-                                                onClick={() => navigate(`/movie/${movie.tmdbId}`)}
+                                                onClick={() => {
+                                                    const movieId = movie.tmdbId || movie._id;
+                                                    if (movieId) {
+                                                        navigate(`/movie/${movieId}`);
+                                                    } else {
+                                                        alert("Movie ID is missing. Cannot navigate to details.");
+                                                    }
+                                                }}
                                                 className="bg-purple-600/80 backdrop-blur-sm p-3 rounded-full hover:bg-purple-700/80 transition-colors"
                                             >
                                                 <FaPlay className="text-white ml-1" />
@@ -168,7 +175,14 @@ const MovieCategories = ({ nowPlaying, popular, upcoming }) => {
                                         <motion.button
                                             whileHover={{ scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
-                                            onClick={() => navigate(`/movie/${movie.tmdbId}`)}
+                                            onClick={() => {
+                                                const movieId = movie.tmdbId || movie._id;
+                                                if (movieId) {
+                                                    navigate(`/movie/${movieId}`);
+                                                } else {
+                                                    alert("Movie ID is missing. Cannot navigate to details.");
+                                                }
+                                            }}
                                             className="w-full bg-gradient-to-r from-purple-600 to-pink-600 text-white py-2 rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition-all duration-300"
                                         >
                                             View Details

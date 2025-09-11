@@ -7,6 +7,12 @@ import { FaStar, FaPlay, FaHeart } from "react-icons/fa";
 const MovieCard = ({ movie }) => {
     const navigate = useNavigate();
 
+    // Defensive check for valid movie ID
+    const movieId = movie.tmdbId || movie._id;
+    if (!movieId) {
+        console.warn("MovieCard: Missing movie ID for navigation", movie);
+    }
+
     return (
         <motion.div
             whileHover={{
@@ -14,8 +20,14 @@ const MovieCard = ({ movie }) => {
                 rotateY: 5,
                 transition: { duration: 0.3 }
             }}
-            className="group relative w-full h-96 rounded-2xl overflow-hidden cursor-pointer shadow-xl"
-            onClick={() => navigate(`/movie/${movie.tmdbId || movie._id}`)}
+            className="group relative w-full h-full aspect-[2/3] rounded-2xl overflow-hidden cursor-pointer shadow-xl flex flex-col"
+            onClick={() => {
+                if (movieId) {
+                    navigate(`/movie/${movieId}`);
+                } else {
+                    alert("Movie ID is missing. Cannot navigate to details.");
+                }
+            }}
         >
             {/* Background Image */}
             <img
@@ -115,7 +127,7 @@ MovieCard.propTypes = {
         rating: PropTypes.number,
         releaseDate: PropTypes.string,
         duration: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-        genre: PropTypes.string
+        genre: PropTypes.oneOfType([PropTypes.string, PropTypes.array])
     }).isRequired
 };
 
