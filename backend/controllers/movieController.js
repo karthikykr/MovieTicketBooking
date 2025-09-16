@@ -1,5 +1,5 @@
 const Movie = require("../models/movieModel");
-const tmdbService = require("../services/tmdbService");
+const omdbService = require("../services/omdbService");
 
 // Create a new movie
 const addMovie = async (req, res) => {

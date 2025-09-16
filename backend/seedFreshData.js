@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const axios = require("axios");
 const dotenv = require("dotenv");
 
 // Load environment variables
@@ -128,79 +129,68 @@ const seedUsers = async () => {
 
 // Seed Movies
 const seedMovies = async () => {
-  const movies = [
-    {
-      title: "Avengers: Endgame",
-      genre: ["Action", "Adventure", "Sci-Fi"],
-      duration: 181,
-      releaseDate: new Date("2019-04-26"),
-      rating: 8.4,
-      description: "After the devastating events of Avengers: Infinity War, the universe is in ruins. With the help of remaining allies, the Avengers assemble once more in order to reverse Thanos' actions and restore balance to the universe.",
-      status: "now_playing",
-      posterUrl: "https://image.tmdb.org/t/p/w500/or06FN3Dka5tukK1e9sl16pB3iy.jpg",
-      backdropUrl: "https://image.tmdb.org/t/p/w1280/7RyHsO4yDXtBv1zUU3mTpHeQ0d5.jpg",
-      cast: [
-        { name: "Robert Downey Jr.", character: "Tony Stark / Iron Man", order: 0 },
-        { name: "Chris Evans", character: "Steve Rogers / Captain America", order: 1 },
-        { name: "Mark Ruffalo", character: "Bruce Banner / Hulk", order: 2 },
-      ],
-      crew: [
-        { name: "Anthony Russo", job: "Director", department: "Directing" },
-        { name: "Joe Russo", job: "Director", department: "Directing" },
-        { name: "Christopher Markus", job: "Writer", department: "Writing" },
-        { name: "Stephen McFeely", job: "Writer", department: "Writing" },
-      ],
-      language: "English",
-      country: "USA",
-    },
-    {
-      title: "Spider-Man: No Way Home",
-      genre: ["Action", "Adventure", "Sci-Fi"],
-      duration: 148,
-      releaseDate: new Date("2021-12-17"),
-      rating: 8.2,
-      description: "Peter Parker's secret identity is revealed to the entire world. Desperate for help, Peter turns to Doctor Strange to make the world forget that he is Spider-Man. The spell goes horribly wrong and shatters the multiverse.",
-      status: "now_playing",
-      posterUrl: "https://image.tmdb.org/t/p/w500/1g0dhYtq4irTY1GPXvft6k4YLjm.jpg",
-      backdropUrl: "https://image.tmdb.org/t/p/w1280/14QbnygCuTO0vl7CAFmPf1fgZfV.jpg",
-      cast: [
-        { name: "Tom Holland", character: "Peter Parker / Spider-Man", order: 0 },
-        { name: "Zendaya", character: "MJ", order: 1 },
-        { name: "Benedict Cumberbatch", character: "Doctor Strange", order: 2 },
-      ],
-      crew: [
-        { name: "Jon Watts", job: "Director", department: "Directing" },
-      ],
-      language: "English",
-      country: "USA",
-    },
-    {
-      title: "The Dark Knight",
-      genre: ["Action", "Crime", "Drama"],
-      duration: 152,
-      releaseDate: new Date("2008-07-18"),
-      rating: 9.0,
-      description: "Batman raises the stakes in his war on crime. With the help of Lt. Jim Gordon and District Attorney Harvey Dent, Batman sets out to dismantle the remaining criminal organizations that plague the streets.",
-      status: "now_playing",
-      posterUrl: "https://image.tmdb.org/t/p/w500/qJ2tW6WMUDux911r6m7haRef0WH.jpg",
-      backdropUrl: "https://image.tmdb.org/t/p/w1280/hqkIcbrOHL86UncnHIsHVcVmzue.jpg",
-      cast: [
-        { name: "Christian Bale", character: "Bruce Wayne / Batman", order: 0 },
-        { name: "Heath Ledger", character: "The Joker", order: 1 },
-        { name: "Aaron Eckhart", character: "Harvey Dent / Two-Face", order: 2 },
-      ],
-      crew: [
-        { name: "Christopher Nolan", job: "Director", department: "Directing" },
-        { name: "Christopher Nolan", job: "Writer", department: "Writing" },
-        { name: "Jonathan Nolan", job: "Writer", department: "Writing" },
-      ],
-      language: "English",
-      country: "USA",
-    },
+  const movieTitles = [
+    "Avengers: Endgame",
+    "Spider-Man: No Way Home",
+    "The Dark Knight"
   ];
-  const createdMovies = await Movie.insertMany(movies);
-  console.log(`${createdMovies.length} movies created`);
-  return createdMovies;
+
+  const movies = [];
+
+  for (const title of movieTitles) {
+    try {
+      const apiKey = process.env.OMDB_API_KEY || '376c6b8d';
+      const response = await axios.get('http://www.omdbapi.com/', {
+        params: {
+          apikey: apiKey,
+          t: title
+        }
+      });
+
+      if (response.data.Response === 'True') {
+        const movieData = response.data;
+
+        const movie = new Movie({
+          title: movieData.Title,
+          genre: movieData.Genre ? movieData.Genre.split(',').map(g => g.trim()) : [],
+          duration: parseInt(movieData.Runtime) || 120,
+          releaseDate: new Date(movieData.Released),
+          rating: parseFloat(movieData.imdbRating) || 0,
+          votes: parseInt(movieData.imdbVotes.replace(/,/g, '')) || 0,
+          description: movieData.Plot,
+          status: "now_playing",
+          image: movieData.Poster !== 'N/A' ? movieData.Poster : null,
+          backdropImage: null,
+          cast: movieData.Actors ? movieData.Actors.split(',').map((name, index) => ({
+            name: name.trim(),
+            character: 'Unknown',
+            order: index
+          })) : [],
+          crew: movieData.Director ? [
+            { name: movieData.Director, job: 'Director', department: 'Directing' },
+            ...(movieData.Writer ? [{ name: movieData.Writer, job: 'Writer', department: 'Writing' }] : [])
+          ] : [],
+          language: movieData.Language || 'English',
+          country: movieData.Country || 'USA',
+          imdbId: movieData.imdbID,
+          isActive: true
+        });
+
+        movies.push(movie);
+      }
+    } catch (error) {
+      console.error(`Error fetching movie data for ${title}:`, error);
+    }
+  }
+
+  if (movies.length > 0) {
+    const createdMovies = await Movie.insertMany(movies);
+    console.log(`${createdMovies.length} movies created`);
+    return createdMovies;
+  } else {
+    console.log('No movies created');
+    return [];
+  }
 };
 
 // Seed Theaters
