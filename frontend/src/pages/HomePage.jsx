@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import Hero from '../components/Hero';
 import MovieGrid from '../components/MovieGrid';
 import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 import MovieCategories from '../components/MovieCategories';
 import TrendingSection from '../components/TrendingSection';
 import axios from 'axios';
@@ -76,39 +77,42 @@ const HomePage = () => {
     }
 
     return (
-        <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900"
-        >
-            <Navbar />
+        <>
+            <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                animate="visible"
+                className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-violet-900"
+            >
+                <Navbar />
 
-            <motion.div variants={sectionVariants}>
-                <Hero movies={popularMovies.slice(0, 5)} />
-            </motion.div>
+                <motion.div variants={sectionVariants}>
+                    <Hero movies={popularMovies.slice(0, 5)} />
+                </motion.div>
 
-            <motion.div variants={sectionVariants}>
-                <TrendingSection movies={popularMovies.slice(0, 10)} />
-            </motion.div>
+                <motion.div variants={sectionVariants}>
+                    <TrendingSection movies={popularMovies.slice(0, 10)} />
+                </motion.div>
 
-            <motion.div variants={sectionVariants}>
-            <MovieCategories
-                nowPlaying={nowPlayingMovies.filter(movie => movie.tmdbId || movie._id)}
-                popular={popularMovies.filter(movie => movie.tmdbId || movie._id)}
-                upcoming={upcomingMovies.filter(movie => movie.tmdbId || movie._id)}
-            />
-            </motion.div>
+                <motion.div variants={sectionVariants}>
+                <MovieCategories
+                    nowPlaying={nowPlayingMovies.filter(movie => movie.tmdbId || movie._id)}
+                    popular={popularMovies.filter(movie => movie.tmdbId || movie._id)}
+                    upcoming={upcomingMovies.filter(movie => movie.tmdbId || movie._id)}
+                />
+                </motion.div>
 
-            <motion.div variants={sectionVariants} className="py-16">
-                <div className="max-w-7xl mx-auto px-4">
-                    <h2 className="text-4xl font-bold text-white mb-8 text-center">
-                        Now Playing
-                    </h2>
-                    <MovieGrid movies={nowPlayingMovies.filter(movie => movie.tmdbId || movie._id)} />
-                </div>
+                <motion.div variants={sectionVariants} className="py-16">
+                    <div className="max-w-7xl mx-auto px-4">
+                        <h2 className="text-4xl font-bold text-white mb-8 text-center">
+                            Now Playing
+                        </h2>
+                        <MovieGrid movies={nowPlayingMovies.filter(movie => movie.tmdbId || movie._id)} />
+                    </div>
+                </motion.div>
             </motion.div>
-        </motion.div>
+            <Footer />
+        </>
     );
 };
 
