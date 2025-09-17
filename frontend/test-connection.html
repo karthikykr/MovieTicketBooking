@@ -103,9 +103,9 @@
 
                 // Test API endpoints
                 const [nowPlayingRes, popularRes, theatersRes] = await Promise.all([
-                    fetch('http://localhost:3001/api/movies/allMovie'),
-                    fetch('http://localhost:3001/api/movies/popular'),
-                    fetch('http://localhost:3001/api/theaters')
+                    fetch('http://localhost:5000/api/movies/allMovie'),
+                    fetch('http://localhost:5000/api/movies/popular'),
+                    fetch('http://localhost:5000/api/theaters')
                 ]);
 
                 if (!nowPlayingRes.ok) throw new Error('Failed to fetch now playing movies');
@@ -149,7 +149,7 @@
                 document.getElementById('status').innerHTML = `
                     <div class="error">
                         ❌ Connection failed: ${error.message}<br>
-                        🔧 Make sure the backend server is running on port 3001
+                        🔧 Make sure the backend server is running on port 5000
                     </div>
                 `;
             }

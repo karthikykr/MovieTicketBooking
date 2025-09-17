@@ -130,6 +130,7 @@ router.get("/:showtimeId/seats", async (req, res) => {
 // Book selected seats
 router.post("/:showtimeId/book", async (req, res) => {
     try {
+        console.log("Booking request received:", req.params, req.body);
         const { selectedSeats } = req.body;
         const { showtimeId } = req.params;
 
@@ -150,6 +151,7 @@ router.post("/:showtimeId/book", async (req, res) => {
             bookingId: `booking_${Date.now()}`
         });
     } catch (error) {
+        console.error("Booking error:", error);
         res.status(500).json({ message: "Server Error", error: error.message });
     }
 });

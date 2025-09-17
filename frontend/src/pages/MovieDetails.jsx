@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
+import { apiCall, API_ENDPOINTS } from "../utils/api";
 
 const MovieDetails = () => {
     const { id } = useParams();
@@ -13,7 +14,7 @@ const MovieDetails = () => {
     useEffect(() => {
         const fetchMovieDetails = async () => {
             try {
-                const response = await fetch(`http://localhost:3001/api/movies/${id}`);
+                const response = await apiCall(API_ENDPOINTS.MOVIES.BY_ID(id));
                 if (!response.ok) {
                     if (response.status === 404) {
                         throw new Error("Movie not found");
@@ -77,7 +78,7 @@ const MovieDetails = () => {
                         </p>
                         <p className="text-gray-700 mt-5 text-lg">{movie.description}</p>
                         <button
-                            onClick={() => navigate(`/showtimes/${id}`)}
+                            onClick={() => navigate(`/showtimes/${movie?.tmdbId || id}`)}
                             className="mt-5 px-6 py-3 bg-red-500 text-white rounded-lg shadow-lg hover:bg-red-600 transition text-lg font-semibold"
                         >
                             Book Tickets

@@ -19,7 +19,7 @@ const ShowtimesPage = () => {
         const fetchMovieAndShowtimes = async () => {
             try {
                 // Fetch showtimes based on movieId
-                const response = await fetch(`http://localhost:3001/api/showtimes/movies/${movieId}`);
+                const response = await fetch(`http://localhost:5000/api/showtimes/movies/${movieId}`);
                 if (!response.ok) throw new Error("Showtimes not found");
                 const showtimeData = await response.json();
                 if (!showtimeData.length) throw new Error("No showtimes available");
@@ -27,7 +27,7 @@ const ShowtimesPage = () => {
                 setShowtimes(showtimeData);
 
                 // Fetch movie details
-                const movieResponse = await fetch(`http://localhost:3001/api/movies/${movieId}`);
+                const movieResponse = await fetch(`http://localhost:5000/api/movies/${movieId}`);
                 if (!movieResponse.ok) throw new Error("Movie not found");
                 const movieData = await movieResponse.json();
                 setMovie(movieData);

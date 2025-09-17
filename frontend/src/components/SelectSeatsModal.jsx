@@ -14,7 +14,7 @@ const SelectSeatsModal = ({ showtime, showtimeData, onClose }) => {
 
     useEffect(() => {
         // Initialize Socket.IO connection
-        socketRef.current = io('http://localhost:3001');
+        socketRef.current = io('http://localhost:5000');
 
         socketRef.current.on('connect', () => {
             setIsConnected(true);
@@ -113,9 +113,13 @@ const SelectSeatsModal = ({ showtime, showtimeData, onClose }) => {
         }
 
         try {
-            const response = await fetch(`http://localhost:3001/api/showtimes/${showtimeData._id}/book`, {
+            const token = localStorage.getItem('token');
+            const response = await fetch(`http://localhost:5000/api/showtimes/${showtimeData._id}/book`, {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(token ? { Authorization: `Bearer ${token}` } : {})
+                },
                 body: JSON.stringify({ selectedSeats })
             });
 
