@@ -105,8 +105,15 @@ MovieTicketBooking/
    - Create a new cluster
    - Update `MONGO_URI` in backend/.env with your Atlas connection string
 
+## Hosting
+
+This application is hosted on:
+- **Frontend**: Vercel - [https://movie-ticket-booking-livid-delta.vercel.app/](https://movie-ticket-booking-livid-delta.vercel.app/)
+- **Backend**: Render
+
 ## Usage
 
+### Local Development
 1. **Start both servers** (backend and frontend)
 2. **Open browser** and navigate to `http://localhost:5173`
 3. **Browse movies** on the homepage
@@ -114,6 +121,9 @@ MovieTicketBooking/
 5. **Select a movie** and view showtimes
 6. **Choose seats** and complete booking
 7. **View bookings** in the user dashboard
+
+### Live Application
+Visit the live application at: [https://movie-ticket-booking-livid-delta.vercel.app/](https://movie-ticket-booking-livid-delta.vercel.app/)
 
 ## API Endpoints
 
